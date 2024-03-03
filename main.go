@@ -7,7 +7,7 @@ type App struct {
 }
 
 type Config struct {
-	// extension of files want to filter
+	// Extension of files want to filter
 	ext *string
 
 	// Minimum file size in bytes
@@ -16,15 +16,23 @@ type Config struct {
 	// Maximum file size in bytes
 	max_size *int64
 
-	// verbose mode
+	// Verbose mode
 	verbose *bool
 
-	// list mode
+	// List mode
 	list *bool
 }
 
 func main() {
-	app := App{}
+	app := &App{
+		config: &Config{
+			ext:      StringPtr(""),
+			min_size: Int64Ptr(0),
+			max_size: Int64Ptr(0),
+			verbose:  BoolPtr(false),
+			list:     BoolPtr(false),
+		},
+	}
 	app.Parse()
 }
 
@@ -36,4 +44,16 @@ func (app *App) Parse() {
 	flag.BoolVar(app.config.verbose, "v", false, "Verbose mode")
 	flag.StringVar(app.config.ext, "ext", ".", "Extension of files")
 	flag.Parse()
+}
+
+func StringPtr(str string) *string {
+	return &str
+}
+
+func BoolPtr(b bool) *bool {
+	return &b
+}
+
+func Int64Ptr(number int64) *int64 {
+	return &number
 }
