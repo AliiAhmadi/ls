@@ -1,6 +1,10 @@
 package main
 
-import "flag"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 type App struct {
 	config *Config
@@ -38,6 +42,11 @@ func main() {
 		},
 	}
 	app.Parse()
+
+	if err := app.run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
 
 func (app *App) Parse() {
@@ -61,4 +70,8 @@ func BoolPtr(b bool) *bool {
 
 func Int64Ptr(number int64) *int64 {
 	return &number
+}
+
+func (app *App) run() error {
+	return nil
 }
