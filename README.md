@@ -1,2 +1,3 @@
 # ls
-Listing contents of directories
+
+Command-line tool for walking in file system
