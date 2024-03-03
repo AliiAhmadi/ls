@@ -21,6 +21,9 @@ type Config struct {
 
 	// List mode
 	list *bool
+
+	// Root path to start
+	root *string
 }
 
 func main() {
@@ -31,6 +34,7 @@ func main() {
 			max_size: Int64Ptr(0),
 			verbose:  BoolPtr(false),
 			list:     BoolPtr(false),
+			root:     StringPtr("."),
 		},
 	}
 	app.Parse()
@@ -42,7 +46,8 @@ func (app *App) Parse() {
 	flag.Int64Var(app.config.max_size, "max", int64(100000000000), "Maximum file size")
 	flag.BoolVar(app.config.list, "list", false, "List mode")
 	flag.BoolVar(app.config.verbose, "v", false, "Verbose mode")
-	flag.StringVar(app.config.ext, "ext", ".", "Extension of files")
+	flag.StringVar(app.config.ext, "ext", "", "Extension of files")
+	flag.StringVar(app.config.root, "root", ".", "Root path to start walk")
 	flag.Parse()
 }
 
