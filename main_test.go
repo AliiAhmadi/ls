@@ -20,7 +20,7 @@ func TestPointerGenerators(t *testing.T) {
 			ptr := StringPtr(test.value)
 
 			if test.value != *ptr {
-				t.Errorf("Test string pointer: invalid value - expected %s - got %s", *ptr, test.value)
+				t.Errorf("Test string pointer: invalid value - expected %s - got %s", test.value, *ptr)
 			}
 		}
 	})
