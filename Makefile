@@ -5,3 +5,8 @@ help:
 
 build:
 	@go build -o ls
+
+test:
+	@go test ./...
+
+.PHONY: help build
