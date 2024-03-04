@@ -153,7 +153,7 @@ func TestRun(t *testing.T) {
 					root:     StringPtr("testdata"),
 				},
 			},
-			expected: "testdata/test.log\ntestdata/test.sh\n",
+			expected: "testdata/test.log\ntestdata/test1/test.sh\n",
 		},
 		{
 			name: "filter extension match",
@@ -166,7 +166,7 @@ func TestRun(t *testing.T) {
 					root:     StringPtr("testdata"),
 				},
 			},
-			expected: "testdata/test.sh\n",
+			expected: "testdata/test1/test.sh\n",
 		},
 		{
 			name: "filter extension size match",
