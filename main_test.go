@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func TestInputFlags(t *testing.T) {
 
@@ -59,4 +62,72 @@ func TestPointerGenerators(t *testing.T) {
 			}
 		}
 	})
+}
+
+func TestFilterOutFunction(t *testing.T) {
+	tests := []struct {
+		name     string
+		file     string
+		ext      string
+		minSize  int64
+		maxSize  int64
+		expected bool
+	}{
+		{
+			name:     "filter no extension",
+			file:     "testdata/test.log",
+			ext:      "",
+			minSize:  0,
+			maxSize:  100,
+			expected: false,
+		},
+		{
+			name:     "filter extension match",
+			file:     "testdata/test.log",
+			ext:      ".log",
+			minSize:  0,
+			maxSize:  100,
+			expected: false,
+		},
+		{
+			name:     "filter extension no match",
+			file:     "testdata/test.log",
+			ext:      ".sh",
+			minSize:  0,
+			maxSize:  100,
+			expected: true,
+		},
+		{
+			name:     "filter extension size match",
+			file:     "testdata/test.log",
+			ext:      ".log",
+			minSize:  10,
+			maxSize:  100,
+			expected: false,
+		},
+		{
+			name:     "filter extension size no match",
+			file:     "testdata/test.log",
+			ext:      ".log",
+			minSize:  200,
+			maxSize:  1000,
+			expected: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			info, err := os.Stat(test.file)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			res := filterOut(test.file, &test.ext, &test.minSize, &test.maxSize, info)
+
+			if res != test.expected {
+				t.Errorf("TestFilterOutFunction: expected '%t' - got '%t'", test.expected, res)
+			}
+		})
+	}
 }
