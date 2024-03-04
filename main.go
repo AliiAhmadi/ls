@@ -95,3 +95,15 @@ func (app *App) run() error {
 		return nil
 	})
 }
+
+func filterOut(path string, ext *string, minSize *int64, maxSize *int64, info fs.FileInfo) bool {
+	if info.IsDir() || info.Size() > *maxSize || info.Size() < *minSize {
+		return true
+	}
+
+	if *ext != "" && filepath.Ext(path) != *ext {
+		return true
+	}
+
+	return false
+}
