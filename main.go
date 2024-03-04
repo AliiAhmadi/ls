@@ -92,7 +92,7 @@ func (app *App) run() error {
 			return listFile(path, app.out)
 		}
 
-		return nil
+		return listFile(path, app.out)
 	})
 }
 
@@ -106,4 +106,9 @@ func filterOut(path string, ext *string, minSize *int64, maxSize *int64, info fs
 	}
 
 	return false
+}
+
+func listFile(path string, out io.Writer) error {
+	_, err := fmt.Fprintln(out, path)
+	return err
 }
