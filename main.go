@@ -3,11 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 type App struct {
 	config *Config
+
+	out io.Writer
 }
 
 type Config struct {
@@ -40,6 +45,7 @@ func main() {
 			list:     BoolPtr(false),
 			root:     StringPtr("."),
 		},
+		out: os.Stdout,
 	}
 	app.Parse()
 
@@ -73,5 +79,19 @@ func Int64Ptr(number int64) *int64 {
 }
 
 func (app *App) run() error {
-	return nil
+	return filepath.Walk(*app.config.root, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if filterOut(path, app.config.ext, app.config.min_size, app.config.max_size, info) {
+			return nil
+		}
+
+		if *app.config.list {
+			return listFile(path, app.out)
+		}
+
+		return nil
+	})
 }
