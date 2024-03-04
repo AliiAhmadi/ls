@@ -97,7 +97,7 @@ func (app *App) run() error {
 }
 
 func filterOut(path string, ext *string, minSize *int64, maxSize *int64, info fs.FileInfo) bool {
-	if info.IsDir() || info.Size() > *maxSize || info.Size() < *minSize {
+	if info.IsDir() || info.Size() >= *maxSize || info.Size() <= *minSize {
 		return true
 	}
 

@@ -6,7 +6,13 @@ help:
 build:
 	@go build -o ls
 
-test:
+test: clear_cache
 	@go test ./...
 
-.PHONY: help build test
+testv: clear_cache
+	@go test -v ./...
+
+clear_cache:
+	@go clean -cache
+
+.PHONY: help build test clear_cache testv

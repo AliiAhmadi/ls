@@ -1,6 +1,10 @@
+// Author: Ali Ahmadi <ali.ahmadi9@ut.ac.ir>
+// Dedicated to MHM
+
 package main
 
 import (
+	"bytes"
 	"os"
 	"testing"
 )
@@ -127,6 +131,111 @@ func TestFilterOutFunction(t *testing.T) {
 
 			if res != test.expected {
 				t.Errorf("TestFilterOutFunction: expected '%t' - got '%t'", test.expected, res)
+			}
+		})
+	}
+}
+
+func TestRun(t *testing.T) {
+	tests := []struct {
+		name     string
+		app      *App
+		expected string
+	}{
+		{
+			name: "no filter",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(""),
+					min_size: Int64Ptr(0),
+					max_size: Int64Ptr(100),
+					list:     BoolPtr(true),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "testdata/test.log\ntestdata/test.sh\n",
+		},
+		{
+			name: "filter extension match",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(".sh"),
+					min_size: Int64Ptr(10),
+					max_size: Int64Ptr(1000),
+					list:     BoolPtr(false),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "testdata/test.sh\n",
+		},
+		{
+			name: "filter extension size match",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(".log"),
+					min_size: Int64Ptr(10),
+					max_size: Int64Ptr(1000),
+					list:     BoolPtr(true),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "testdata/test.log\n",
+		},
+		{
+			name: "filter extension size no match",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(".sh"),
+					min_size: Int64Ptr(100),
+					max_size: Int64Ptr(1000),
+					list:     BoolPtr(true),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "",
+		},
+		{
+			name: "filter extension size no match",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(".sh"),
+					min_size: Int64Ptr(0),
+					max_size: Int64Ptr(3),
+					list:     BoolPtr(true),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "",
+		},
+		{
+			name: "filter extension no match",
+			app: &App{
+				config: &Config{
+					ext:      StringPtr(".exe"),
+					min_size: Int64Ptr(0),
+					max_size: Int64Ptr(100),
+					list:     BoolPtr(false),
+					root:     StringPtr("testdata"),
+				},
+			},
+			expected: "",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var buf bytes.Buffer
+
+			test.app.out = &buf
+
+			if err := test.app.run(); err != nil {
+				t.Fatal(err)
+			}
+
+			res := buf.String()
+
+			if test.expected != res {
+				t.Errorf("TestRun: expected '%s' - got '%s'", test.expected, res)
 			}
 		})
 	}
