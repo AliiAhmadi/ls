@@ -9,4 +9,4 @@ build:
 test:
 	@go test ./...
 
-.PHONY: help build
+.PHONY: help build test
